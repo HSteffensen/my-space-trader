@@ -9,9 +9,11 @@
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
         "lint": "prettier --plugin-search-dir . --check . && eslint .",
-        "format": "prettier --plugin-search-dir . --write ."
+        "format": "prettier --plugin-search-dir . --write .",
+        "generate": "rm -rf ./generated/spacetraders-sdk; openapi-generator-cli generate --generator-key spacetraders-ts"
     },
     "devDependencies": {
+        "@openapitools/openapi-generator-cli": "^2.7.0",
         "@sveltejs/adapter-auto": "^2.0.0",
         "@sveltejs/kit": "^1.20.4",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
@@ -30,5 +32,8 @@
         "typescript": "^5.0.0",
         "vite": "^4.4.2"
     },
-    "type": "module"
+    "type": "module",
+    "dependencies": {
+        "spacetraders-sdk": "link:generated/spacetraders-sdk"
+    }
 }

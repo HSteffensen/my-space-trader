@@ -1,0 +1,31 @@
+{
+  "$schema": "./node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "spaces": 2,
+  "generator-cli": {
+    "version": "7.0.1",
+    "generators": {
+      "spacetraders-ts": {
+        "generatorName": "typescript",
+        "output": "./generated/spacetraders-sdk",
+        "inputSpec": "https://stoplight.io/api/v1/projects/spacetraders/spacetraders/nodes/reference/SpaceTraders.json?fromExportButton=true&snapshotType=http_service&deref=optimizedBundle",
+        "skipValidateSpec": true,
+        "additionalProperties": {
+          "npmName": "spacetraders-sdk",
+          "npmVersion": "2.0.0",
+          "supportsES6": "true"
+        }
+      },
+      "spacetraders-ts-fetch": {
+        "generatorName": "typescript-fetch",
+        "output": "./generated/spacetraders-sdk",
+        "inputSpec": "https://stoplight.io/api/v1/projects/spacetraders/spacetraders/nodes/reference/SpaceTraders.json?fromExportButton=true&snapshotType=http_service&deref=optimizedBundle",
+        "skipValidateSpec": true,
+        "additionalProperties": {
+          "npmName": "spacetraders-sdk",
+          "npmVersion": "2.0.0",
+          "supportsES6": "true"
+        }
+      }
+    }
+  }
+}
