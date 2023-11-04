@@ -4,11 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-dependencies:
-  spacetraders-sdk:
-    specifier: link:generated/spacetraders-sdk
-    version: link:generated/spacetraders-sdk
-
 devDependencies:
   '@openapitools/openapi-generator-cli':
     specifier: ^2.7.0
