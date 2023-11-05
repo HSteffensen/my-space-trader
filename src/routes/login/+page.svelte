@@ -1,5 +1,11 @@
 <script lang="ts">
-    import { checkAgentExists, getAgentInfoForToken } from "$lib/auth";
+    import { goto } from "$app/navigation";
+    import {
+        bearerToken,
+        checkAgentExists,
+        getAgentInfoForToken,
+        registerNewAgent,
+    } from "$lib/auth";
     import { FactionSymbols } from "$lib/spacetraders";
 
     let agentName: string = "";
@@ -49,6 +55,18 @@
             });
         }, 500);
     }
+
+    function register() {
+        registerNewAgent(agentName, faction).then((agentData) => {
+            $bearerToken = agentData.data.token;
+            goto("/play");
+        });
+    }
+
+    function login() {
+        $bearerToken = token;
+        goto("/play");
+    }
 </script>
 
 <div class="flex content-between w-2/3 m-auto">
@@ -57,6 +75,7 @@
         <form class="flex flex-col">
             <input
                 type="text"
+                class="uppercase"
                 placeholder="Agent name"
                 bind:value={agentName}
                 on:input={checkAgentNameAvailable}
@@ -71,7 +90,7 @@
                     <p>Checking if this name is available...</p>
                 {:else if agentNameTouched && agentNameAvailable}
                     <p>Agent name is available.</p>
-                    <button>Start</button>
+                    <button on:click={register}>Start</button>
                 {:else if agentNameTouched && !agentNameAvailable}
                     <p>Agent name is not available.</p>
                 {/if}
@@ -94,7 +113,7 @@
                     <p>Checking if token is valid...</p>
                 {:else if tokenTouched && tokenValid}
                     <p>Token is valid for agent '{tokenAgentName}'.</p>
-                    <button>Start</button>
+                    <button on:click={login}>Start</button>
                 {:else if tokenTouched && !tokenValid}
                     <p>Token is not valid.</p>
                 {/if}

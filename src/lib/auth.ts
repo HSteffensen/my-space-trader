@@ -21,6 +21,11 @@ export function checkAgentExists(symbol: string) {
         .catch(() => false);
 }
 
+export function registerNewAgent(symbol: string, faction: spacetraders.FactionSymbols) {
+    const defaultApi = new spacetraders.DefaultApi(spacetraders.createConfiguration());
+    return defaultApi.register({ symbol, faction });
+}
+
 export const bearerToken = writable("");
 
 export const apiConfig = derived(bearerToken, (value) => bearerTokenAuth(value));

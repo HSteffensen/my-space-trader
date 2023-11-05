@@ -7,10 +7,10 @@
         // TODO: use a session cookie
         let token = get(bearerToken);
         if (token === "") {
-            goto("login");
+            goto("/login");
         }
         getAgentInfoForToken(token)
-            .then(() => goto("play"))
-            .catch(() => goto("login"));
+            .then(() => goto("/play"))
+            .catch(() => goto("/login"));
     });
 </script>
