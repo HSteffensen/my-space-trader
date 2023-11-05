@@ -6,6 +6,8 @@
 
     onMount(() => {
         if (get(bearerToken) === "") {
+            // TODO: do this with middleware on invalid token error instead
+            console.log("empty bearer token, returning to login");
             goto("/login");
         }
     });

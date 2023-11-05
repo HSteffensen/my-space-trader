@@ -6,7 +6,7 @@
         getAgentInfoForToken,
         registerNewAgent,
     } from "$lib/auth";
-    import { FactionSymbols } from "$lib/spacetraders";
+    import { FactionSymbols } from "$lib/spacetraders/models";
 
     let agentName: string = "";
     let agentNameLoading = false;
@@ -56,16 +56,20 @@
         }, 500);
     }
 
+    function startWithToken(newToken: string) {
+        bearerToken.set(newToken);
+        goto("/play");
+    }
+
     function register() {
         registerNewAgent(agentName, faction).then((agentData) => {
-            $bearerToken = agentData.data.token;
-            goto("/play");
+            startWithToken(agentData.data.token);
         });
     }
 
     function login() {
-        $bearerToken = token;
-        goto("/play");
+        // bug: the goto() doesn't work without this...
+        setTimeout(() => startWithToken(token), 0);
     }
 </script>
 
@@ -85,7 +89,7 @@
                     <option value={factionOption}>{factionOption}</option>
                 {/each}
             </select>
-            <div>
+            <div class="h-4">
                 {#if agentNameLoading}
                     <p>Checking if this name is available...</p>
                 {:else if agentNameTouched && agentNameAvailable}
@@ -108,7 +112,7 @@
                 bind:value={token}
                 on:input={checkTokenExists}
             />
-            <div>
+            <div class="h-4">
                 {#if tokenLoading}
                     <p>Checking if token is valid...</p>
                 {:else if tokenTouched && tokenValid}

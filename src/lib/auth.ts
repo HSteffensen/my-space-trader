@@ -1,4 +1,4 @@
-import * as spacetraders from "$lib/spacetraders";
+import spacetraders from "$lib/spacetraders/external";
 import { derived, writable } from "svelte/store";
 
 function bearerTokenAuth(token: string) {
