@@ -1,10 +1,14 @@
 <script lang="ts">
     import { checkAgentExists, getAgentInfoForToken } from "$lib/auth";
+    import { FactionSymbols } from "$lib/spacetraders";
 
     let agentName: string = "";
     let agentNameLoading = false;
     let agentNameAvailable = false;
     $: agentNameTouched = agentName.length > 0;
+
+    const factionsList = Object.values(FactionSymbols).toSorted();
+    let faction = FactionSymbols.Cosmic;
 
     let token: string = "";
     let tokenLoading = false;
@@ -50,13 +54,18 @@
 <div class="flex content-between w-2/3 m-auto">
     <div>
         Create new agent
-        <form>
+        <form class="flex flex-col">
             <input
                 type="text"
                 placeholder="Agent name"
                 bind:value={agentName}
                 on:input={checkAgentNameAvailable}
             />
+            <select bind:value={faction}>
+                {#each factionsList as factionOption}
+                    <option value={factionOption}>{factionOption}</option>
+                {/each}
+            </select>
             <div>
                 {#if agentNameLoading}
                     <p>Checking if this name is available...</p>
