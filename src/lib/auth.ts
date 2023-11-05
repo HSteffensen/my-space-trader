@@ -13,7 +13,8 @@ export function getAgentInfoForToken(token: string) {
     return agentsApi.getMyAgent();
 }
 
-export function checkAgentExists(symbol: string) {
+export function checkAgentExists(agentName: string) {
+    const symbol = agentName.toUpperCase();
     const agentsApi = new spacetraders.AgentsApi(spacetraders.createConfiguration());
     return agentsApi
         .getAgentWithHttpInfo(symbol)
