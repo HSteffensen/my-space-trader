@@ -1,6 +1,7 @@
 import * as spacetraders from "$lib/spacetraders";
+import { derived, writable } from "svelte/store";
 
-export function bearerTokenAuth(token: string) {
+function bearerTokenAuth(token: string) {
     return spacetraders.createConfiguration({
         authMethods: { AgentToken: { tokenProvider: { getToken: () => token } } },
     });
@@ -19,3 +20,7 @@ export function checkAgentExists(symbol: string) {
         .then((httpInfo) => httpInfo.httpStatusCode !== 404)
         .catch(() => false);
 }
+
+export const bearerToken = writable("");
+
+export const apiConfig = derived(bearerToken, (value) => bearerTokenAuth(value));
