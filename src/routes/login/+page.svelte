@@ -1,12 +1,16 @@
 <script lang="ts">
+    import { browser } from "$app/environment";
     import { goto } from "$app/navigation";
     import {
+        LOCALSTORAGE_TOKEN_KEY,
         bearerToken,
         checkAgentExists,
         getAgentInfoForToken,
         registerNewAgent,
     } from "$lib/auth";
-    import { FactionSymbols } from "$lib/spacetraders/models";
+    import { FactionSymbols } from "$lib/spacetraders/model";
+    import { onMount } from "svelte";
+    import { get } from "svelte/store";
 
     let agentName: string = "";
     let agentNameLoading = false;
@@ -23,6 +27,23 @@
     $: tokenTouched = token.length > 0;
 
     let debounceTimer: number | undefined;
+
+    onMount(() => {
+        const existingToken = get(bearerToken);
+        if (existingToken !== "") {
+            tokenLoading = true;
+            getAgentInfoForToken(existingToken)
+                .then((result) => {
+                    token = existingToken;
+                    tokenAgentName = result.data.symbol;
+                    tokenLoading = false;
+                })
+                .catch((error) => {
+                    logout();
+                    tokenLoading = false;
+                });
+        }
+    });
 
     function checkTokenExists() {
         tokenValid = false;
@@ -58,6 +79,7 @@
 
     function startWithToken(newToken: string) {
         bearerToken.set(newToken);
+        window.localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, newToken);
         goto("/play");
     }
 
@@ -71,57 +93,78 @@
         // bug: the goto() doesn't work without this...
         setTimeout(() => startWithToken(token), 0);
     }
+
+    function logout() {
+        token = "";
+        bearerToken.set("");
+        window.localStorage.removeItem(LOCALSTORAGE_TOKEN_KEY);
+    }
 </script>
 
-<div class="flex content-between w-2/3 m-auto">
-    <div>
-        Create new agent
-        <form class="flex flex-col">
-            <input
-                type="text"
-                class="uppercase"
-                placeholder="Agent name"
-                bind:value={agentName}
-                on:input={checkAgentNameAvailable}
-            />
-            <select bind:value={faction}>
-                {#each factionsList as factionOption}
-                    <option value={factionOption}>{factionOption}</option>
-                {/each}
-            </select>
-            <div class="h-4">
-                {#if agentNameLoading}
-                    <p>Checking if this name is available...</p>
-                {:else if agentNameTouched && agentNameAvailable}
-                    <p>Agent name is available.</p>
-                    <button on:click={register}>Start</button>
-                {:else if agentNameTouched && !agentNameAvailable}
-                    <p>Agent name is not available.</p>
-                {/if}
+<div class="flex justify-between m-auto">
+    {#if !browser}
+        <div class="loading loading-spinner" />
+    {:else if $bearerToken === ""}
+        <div class="card bg-neutral text-neutral-content">
+            <div class="card-body">
+                Create new agent
+                <form class="flex flex-col">
+                    <input
+                        type="text"
+                        class="uppercase"
+                        placeholder="Agent name"
+                        bind:value={agentName}
+                        on:input={checkAgentNameAvailable}
+                    />
+                    <select bind:value={faction}>
+                        {#each factionsList as factionOption}
+                            <option value={factionOption}>{factionOption}</option>
+                        {/each}
+                    </select>
+                    <div class="h-4">
+                        {#if agentNameLoading}
+                            <p>Checking if this name is available...</p>
+                        {:else if agentNameTouched && agentNameAvailable}
+                            <p>Agent name is available.</p>
+                            <button on:click={register}>Start</button>
+                        {:else if agentNameTouched && !agentNameAvailable}
+                            <p>Agent name is not available.</p>
+                        {/if}
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
-    <div class="mx-4">- OR -</div>
-
-    <div>
-        Use existing agent token
-        <form>
-            <input
-                type="text"
-                placeholder="Bearer token"
-                bind:value={token}
-                on:input={checkTokenExists}
-            />
-            <div class="h-4">
-                {#if tokenLoading}
-                    <p>Checking if token is valid...</p>
-                {:else if tokenTouched && tokenValid}
-                    <p>Token is valid for agent '{tokenAgentName}'.</p>
-                    <button on:click={login}>Start</button>
-                {:else if tokenTouched && !tokenValid}
-                    <p>Token is not valid.</p>
-                {/if}
+        </div>
+        <div class="divider divider-horizontal">OR</div>
+        <div class="card bg-neutral text-neutral-content">
+            <div class="card-body">
+                Use existing agent token
+                <form>
+                    <input
+                        type="text"
+                        placeholder="Bearer token"
+                        bind:value={token}
+                        on:input={checkTokenExists}
+                    />
+                    <div class="h-4">
+                        {#if tokenLoading}
+                            <p>Checking if token is valid...</p>
+                        {:else if tokenTouched && tokenValid}
+                            <p>Token is valid for agent '{tokenAgentName}'.</p>
+                            <button on:click={login}>Start</button>
+                        {:else if tokenTouched && !tokenValid}
+                            <p>Token is not valid.</p>
+                        {/if}
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
+        </div>
+    {:else if tokenLoading}
+        <div class="loading loading-spinner" />
+    {:else}
+        <div class="flex flex-col">
+            Logged in as agent '{tokenAgentName}'.
+            <button on:click={login}>Continue</button>
+            <button on:click={logout}>Log out</button>
+        </div>
+    {/if}
 </div>

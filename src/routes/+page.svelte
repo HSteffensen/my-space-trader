@@ -4,7 +4,6 @@
     import { onMount } from "svelte";
     import { get } from "svelte/store";
     onMount(() => {
-        // TODO: use a session cookie
         let token = get(bearerToken);
         if (token === "") {
             goto("/login");

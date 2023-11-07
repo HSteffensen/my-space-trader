@@ -5,6 +5,6 @@
     $apiConfig;
 </script>
 
-<div class="flex flex-col min-h-screen bg-slate-200">
+<div class="flex flex-col min-h-screen">
     <slot />
 </div>
