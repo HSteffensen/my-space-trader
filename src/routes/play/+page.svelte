@@ -1,5 +1,19 @@
 <script lang="ts">
-    import { bearerToken } from "$lib/auth";
+    import { browser } from "$app/environment";
+    import type { Agent } from "$lib/spacetraders/model";
+    import { agentsApi } from "$lib/spacetraders/api";
+
+    let agentData: Agent;
+
+    if (browser) {
+        $agentsApi.getMyAgent().then((agent) => {
+            agentData = agent.data;
+        });
+    }
 </script>
 
-Logged in with token {$bearerToken}
+{#if agentData}
+    Logged in as agent {agentData.symbol}
+{:else}
+    Loading...
+{/if}

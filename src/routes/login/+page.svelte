@@ -12,6 +12,8 @@
     import { onMount } from "svelte";
     import { get } from "svelte/store";
 
+    let previousLoginInvalid = false;
+
     let agentName: string = "";
     let agentNameLoading = false;
     let agentNameAvailable = false;
@@ -39,6 +41,7 @@
                     tokenLoading = false;
                 })
                 .catch((error) => {
+                    previousLoginInvalid = true;
                     logout();
                     tokenLoading = false;
                 });
@@ -101,6 +104,11 @@
     }
 </script>
 
+{#if true}
+    <p role="alert" class="alert alert-warning sm:mx-auto sm:w-fit sm:px-16">
+        The previous login was invalidated.
+    </p>
+{/if}
 <div class="flex justify-between m-auto">
     {#if !browser}
         <div class="loading loading-spinner" />

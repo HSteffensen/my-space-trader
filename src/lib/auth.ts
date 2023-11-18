@@ -1,6 +1,6 @@
 import { browser } from "$app/environment";
 import spacetraders from "$lib/spacetraders/external";
-import { derived, writable } from "svelte/store";
+import { writable } from "svelte/store";
 
 export const LOCALSTORAGE_TOKEN_KEY = "spaceTradersToken";
 
@@ -33,5 +33,3 @@ export function registerNewAgent(symbol: string, faction: spacetraders.FactionSy
 export const bearerToken = writable(
     (browser && localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)) || "",
 );
-
-export const apiConfig = derived(bearerToken, (value) => bearerTokenAuth(value));
