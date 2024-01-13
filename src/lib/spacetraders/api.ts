@@ -2,7 +2,7 @@ import spacetraders from "./external";
 import { bearerToken } from "$lib/auth";
 import { derived } from "svelte/store";
 import { goto } from "$app/navigation";
-import { AgentsApi } from "$lib/generated/spacetraders-sdk";
+import { AgentsApi, FleetApi } from "$lib/generated/spacetraders-sdk";
 
 export const apiConfig = derived(bearerToken, (value) => authConfig(value));
 
@@ -29,3 +29,4 @@ class BadTokenToLogin implements spacetraders.Middleware {
 }
 
 export const agentsApi = derived(apiConfig, (config) => new AgentsApi(config));
+export const fleetApi = derived(apiConfig, (config) => new FleetApi(config));
