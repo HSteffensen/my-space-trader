@@ -13,3 +13,5 @@
             .catch(() => goto("/login"));
     });
 </script>
+
+<div class="m-auto loading loading-spinner" />

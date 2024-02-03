@@ -1,27 +1,35 @@
 <script lang="ts">
-    import type { Agent } from "$lib/spacetraders/model";
-    import { agentsApi } from "$lib/spacetraders/api";
-    import { browser } from "$app/environment";
-
-    let agentData: Agent;
-    if (browser) {
-        $agentsApi.getMyAgent().then((agent) => {
-            agentData = agent.data;
-        });
-    }
+    import { agent } from "$lib/spacetraders/api";
 </script>
 
-<div class="p-4 border rounded-lg border-primary">
-    {#if agentData}
-        <div>
-            <div>👨‍🚀{agentData.symbol}</div>
-            <div>✨{agentData.startingFaction}</div>
-            <div>
-                &#x1FA99;<!-- Coin emoji doesn't show in my editor font -->
-                {agentData.credits}
-            </div>
-        </div>
-    {:else}
-        <div class="loading loading-spinner" />
-    {/if}
+<div class="panel">
+    <div class="panel-grid">
+        {#await $agent}
+            <div class="loading loading-spinner" />
+        {:then agentData}
+            <p class="icon">👨‍🚀</p>
+            <div class="data">{agentData.symbol}</div>
+            <p class="icon">✨</p>
+            <div class="data">{agentData.startingFaction}</div>
+            <p class="icon">&#x1FA99;<!-- Coin emoji doesn't show in my editor font --></p>
+            <div class="data">{agentData.credits}</div>
+        {/await}
+    </div>
 </div>
+
+<style>
+    .panel {
+        @apply p-1 border rounded-lg border-primary flex justify-center;
+        .panel-grid {
+            @apply grid w-fit;
+            grid-template-columns: auto auto;
+            .icon,
+            .data {
+                @apply p-1;
+            }
+            .icon {
+                @apply justify-self-center;
+            }
+        }
+    }
+</style>

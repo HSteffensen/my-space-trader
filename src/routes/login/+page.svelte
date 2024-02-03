@@ -8,7 +8,7 @@
         getAgentInfoForToken,
         registerNewAgent,
     } from "$lib/auth";
-    import { FactionSymbols } from "$lib/spacetraders/model";
+    import { FactionSymbols } from "$lib/generated/spacetraders-sdk/models/all";
     import { onMount } from "svelte";
     import { get } from "svelte/store";
 
