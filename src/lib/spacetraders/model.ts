@@ -23,3 +23,14 @@ export type Ship = {
     cargo: ApiModel.ShipCargo;
     fuel: ApiModel.ShipFuel;
 };
+
+export type Contract = {
+    id: string;
+    factionSymbol: string;
+    type: ApiModel.ContractTypeEnum;
+    terms: ApiModel.ContractTerms;
+    accepted: boolean;
+    fulfilled: boolean;
+    expiration: Date;
+    deadlineToAccept?: Date;
+};
